@@ -30,7 +30,7 @@ module Fluent::Plugin
     config_param :auth_tenant,   :string, default: nil
     # identity v3
     desc "Authentication Project. set a value or `#{ENV['OS_PROJECT_NAME']}`"
-    config_param :project_name,  :string, default: nil
+    config_param :project_name,  :string
     desc "Authentication Domain. set a value or `#{ENV['OS_PROJECT_DOMAIN_NAME']}`"
     config_param :domain_name,   :string, default: nil
     desc "Authentication Region. Optional, not required if there is only one region available. set a value or `#{ENV['OS_REGION_NAME']}`"
@@ -86,12 +86,8 @@ module Fluent::Plugin
     if @auth_api_key.empty?
      raise Fluent::ConfigError, "auth_api_key parameter or OS_PASSWORD variable not defined"
     end
-
     if @project_name.empty?
      raise Fluent::ConfigError, "project_name parameter or OS_PROJECT_NAME variable not defined"
-    end
-    if @domain_name.empty?
-     raise Fluent::ConfigError, "domain_name parameter or OS_PROJECT_DOMAIN_NAME variable not defined"
     end
 
     @ext, @mime_type = case @store_as
@@ -114,7 +110,7 @@ module Fluent::Plugin
       end
 
       unless @index_format =~ /^%(0\d*)?[dxX]$/
-        raise Fluent::ConfigError, "index_format parameter should follow `%[flags][width]type`. `0` is the only supported flag, and is mandatory if width is specified. `d`, `x` and `X` are supported types" 
+        raise Fluent::ConfigError, "index_format parameter should follow `%[flags][width]type`. `0` is the only supported flag, and is mandatory if width is specified. `d`, `x` and `X` are supported types"
       end
 
       @swift_object_key_format = process_swift_object_key_format
